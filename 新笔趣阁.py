@@ -58,7 +58,7 @@ def indexPage():
         page.on("response",handle_response)
         # 导航到目标网址
         try:
-            url = "https://www.bq99.cc/book/16843/"
+            url = "https://www.bq99.cc/book/63400/"
             page.goto(url,timeout=9000)
             print(page.content())
             page.wait_for_selector('.listmain >> dd')
@@ -122,11 +122,19 @@ def detailPage(allDetailPages,file_name):
                 print(f"当前爬取的网页标题为： {title_text}")
                 content = page.wait_for_selector('#chaptercontent')
                 content_text = content.text_content()
-                pattern_to_remove = r'无尽的昏迷过后.*御兽师\？'
                 singlePageContent = re.sub(r'&[\da-fA-F]{0,5};', '', content_text)
                 # 使用replace方法将NBSP替换为普通空格
                 singlePageContent = singlePageContent.replace('\u00A0', ' ')
-                singlePageContent = re.sub(pattern_to_remove, '', singlePageContent)
+                pattern_to_remove1 = r'无尽的昏迷过后.*御兽师\？'
+                pattern_to_remove2 = r'请收藏本站.*cc'
+                pattern_to_remove3 = r'『.*』'
+                pattern_to_remove4 = r'^\s*$(?:\n|\r|\r\n)?'
+                pattern_to_remove5 = r'\d+(\s)?(\、)?\S+(：)?\S+(\s\d)?'
+                singlePageContent = re.sub(pattern_to_remove1, '', singlePageContent)
+                singlePageContent = re.sub(pattern_to_remove2, '', singlePageContent)
+                singlePageContent = re.sub(pattern_to_remove3, '', singlePageContent)
+                singlePageContent = re.sub(pattern_to_remove4, '', singlePageContent, flags=re.MULTILINE)
+                singlePageContent = re.sub(pattern_to_remove5, r'\g<0>\n', singlePageContent)
                 print(singlePageContent)
                 # 打开文件以写入模式 ('w' 表示写入，如果文件已存在会被覆盖；'a' 表示追加，会在文件末尾添加内容)
                 with open(file_name, 'a', encoding='utf-8') as file:
@@ -147,7 +155,7 @@ def detailPage(allDetailPages,file_name):
 
 if __name__=='__main__':
     # 文件名和路径
-    file_name = "人渣反派自救系统.txt"
+    file_name = "穿书自救指南.txt"
     detailPage(indexPage(),file_name)
 
 # 格式化文本
